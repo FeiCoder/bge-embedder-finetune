@@ -18,24 +18,30 @@ bge-embedder-finetune/
 
 ## 环境准备
 
-本项目依赖 `FlagEmbedding` 及其相关库。确保已安装 `uv` 包管理器。
+建议使用 Python 3.9 及以上版本，推荐使用虚拟环境隔离依赖。
 
 ```bash
-# 安装依赖
-uv pip install FlagEmbedding torch transformers datasets accelerate
+# 1. 创建并激活虚拟环境（假设 uv 已安装）
+uv init
+uv add FlagEmbedding torch transformers datasets accelerate
+# uv sync
+source .venv/bin/activate
 ```
 
 ## 使用指南
 
 ### 1. 数据准备
 
-将原始数据集转换为微调所需的 JSONL 格式 (`query`, `pos`, `neg`).
+首先，下载原始数据集 [MLDR (Multilingual Long Document Retrieval)](https://huggingface.co/datasets/Shitao/MLDR/tree/main/mldr-v1.0-zh) 并将其解压到指定目录（默认为 `/data/zf/Datasets/mldr-v1.0-zh/`）。
+
+将原始数据集转换为微调所需的 JSONL 格式 (`query`, `pos`, `neg`)：
 
 ```bash
 python scripts/prepare_data.py
 ```
-*   输入: `/data/zf/Datasets/mldr-v1.0-zh/`
-*   输出: `data/finetune_data.jsonl`
+*   **数据来源**: [Shitao/MLDR (mldr-v1.0-zh)](https://huggingface.co/datasets/Shitao/MLDR/tree/main/mldr-v1.0-zh)
+*   **输入路径**: `/data/zf/Datasets/mldr-v1.0-zh/`
+*   **输出路径**: `data/finetune_data.jsonl`
 
 ### 2. 模型微调 (Training)
 
@@ -63,12 +69,18 @@ python scripts/prepare_data.py
 *   **加速评估**: 评估脚本会自动检测可用 GPU 并开启 `DataParallel` 进行并行推理。
 *   **Batch Size**: 评估脚本默认 Batch Size 较大 (2048) 以利用 RTX 4090 性能。
 
+## TODO
+
+- **挖掘私域文本匹配业务数据集**：在训练数据中显式加入简单/随机负样本来“锚定”分数的底线。建议修改数据构造逻辑（或训练脚本中的采样逻辑），确保每个 Query 的负样本列表中：
+  - 70% 是硬挖掘的负样本（来自 Top-K，如 Rank 2-20）。
+  - 30% 是随机抽取的负样本（完全随机的文本，或者 Rank 1000+ 的文本）。
+
 ## 性能记录
 
 | 模型 | Recall@10 | NDCG@10 |
 | :--- | :--- | :--- |
-| **BGE Base (v1.5)** | 0.1750 | 0.1354 |
-| **Finetuned** | *待评估* | *待评估* |
+| **BGE Base (v1.5)** | 0.1862 | 0.1395 |
+| **Finetuned** | **0.2338**| **0.1705** |
 
 ## 常见问题
 
