@@ -205,3 +205,66 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# 深度学习/机器学习常见文件
+*.pth
+*.pt
+*.ckpt
+*.h5
+*.onnx
+*.pb
+*.tflite
+*.npz
+*.npy
+*.joblib
+*.pkl
+*.mlmodel
+
+# TensorBoard 日志
+runs/
+tb_logs/
+tensorboard/
+event.out.tfevents.*
+
+# 训练输出、模型、日志等
+output/
+outputs/
+logs/
+log/
+checkpoints/
+checkpoint/
+experiments/
+exp/
+results/
+result/
+save/
+saves/
+weights/
+snapshots/
+
+# 数据集缓存
+data/
+dataset/
+datasets/
+.cache/
+.cache*/
+*.cache
+*.dataset
+*.dat
+*.csv
+*.tsv
+
+# Jupyter Notebook 自动生成文件
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# VSCode/IDE
+.vscode/
+.idea/
+
+# 其他
+.DS_Store
+Thumbs.db
+
+# 覆盖性强的忽略规则（如有需要可取消注释）
+# !important_file.txt
